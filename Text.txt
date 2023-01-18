@@ -1,0 +1,434 @@
+#include "Entity.h"
+
+using namespace std;
+using namespace sf;
+
+
+
+//if Mouse is inside menu area
+bool inMenu(sf::Vector2i lp, sf::Vector2i mp)
+{
+    /*
+    if (e.type == e.KeyPressed)
+    {
+        if (e.key.code == sf::Keyboard::L)
+        {
+            cout << "LP X: " << lp.x << endl;
+            cout << "MP X: " << mp.x << endl;
+            cout << "LP Y: " << lp.y << endl;
+            cout << "MP Y: " << mp.y << endl;
+        }
+    }
+    */
+
+    if (lp.x > (-1 * mp.x) && lp.y > (-1 * mp.y) && lp.x < (-1 * mp.x + 125) && lp.y < (-1 * mp.y + 300))
+    {
+        return true;
+    }
+    return false;
+}
+
+//if mouse is in attack area
+bool inAttack(sf::Vector2i lp, sf::Vector2i mp, sf::Event e)
+{
+    /*
+    if (e.type == e.KeyPressed)
+    {
+        if (e.key.code == sf::Keyboard::L)
+        {
+            cout << "LP X: " << lp.x << endl;
+            cout << "MP X: " << -1* mp.x << endl;
+            cout << "LP Y: " << lp.y << endl;
+            cout << "MP Y: " << -1* mp.y << endl;
+        }
+    }
+    */
+
+    if (lp.x > (-1 * mp.x) && lp.y > (-1 * mp.y) && lp.x < (-1 * mp.x) + 120 && lp.y < (-1 * mp.y) + 30)
+    {
+        return true;
+    }
+    return false;
+}
+
+
+bool ifAttackArea(sf::Vector2i lp, int x, int y)
+{
+    /*
+    if (e.type == e.KeyPressed)
+    {
+        if (e.key.code == sf::Keyboard::L)
+        {
+            cout << "LP X: " << lp.x << endl;
+            cout << "X: " << -1 * x << endl;
+            cout << "LP Y: " << lp.y << endl;
+            cout << "Y: " << -1 * y << endl;
+        }
+    }
+    */
+    //top
+    if (lp.x > (-1 * x) && lp.y < (-1 * y) - 10 && lp.x < (-1 * x) + 60 && lp.y >(-1 * y) - 70)
+    {
+        return true;
+    }
+    //left
+    else if (lp.x > (-1 * x) - 80 && lp.y > (-1 * y) && lp.x < (-1 * x) - 12 && lp.y < (-1 * y) + 50)
+        return true;
+    //bottom
+    else if (lp.x > (-1 * x) && lp.y > (-1 * y) + 55 && lp.x < (-1 * x) + 60 && lp.y < (-1 * y) + 105)
+        return true;
+    //right
+    else if (lp.x > (-1 * x) + 80 && lp.y > (-1 * y) && lp.x < (-1 * x) + 130 && lp.y < (-1 * y) + 50)
+        return true;
+
+    return false;
+}
+
+
+char whichArea(sf::Vector2i lp, int x, int y)
+{
+
+
+    //top
+    if (lp.x > (-1 * x) && lp.y < (-1 * y) - 10 && lp.x < (-1 * x) + 60 && lp.y >(-1 * y) - 70)
+    {
+        return 't';
+    }
+    //left
+    else if (lp.x > (-1 * x) - 80 && lp.y > (-1 * y) && lp.x < (-1 * x) - 12 && lp.y < (-1 * y) + 50)
+        return 'l';
+    //bottom
+    else if (lp.x > (-1 * x) && lp.y > (-1 * y) + 55 && lp.x < (-1 * x) + 60 && lp.y < (-1 * y) + 105)
+        return 'b';
+    //right
+    else if (lp.x > (-1 * x) + 80 && lp.y > (-1 * y) && lp.x < (-1 * x) + 130 && lp.y < (-1 * y) + 50)
+        return 'r';
+
+    return 'f';
+}
+
+
+//Main
+int main()
+{
+    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML works!");
+    Entity Nesha;
+    Entity Enemy;
+    Enemy.setMyColor(sf::Color::Red);
+    Enemy.setMe(Enemy.getX() + 77, Enemy.getY() + 58);
+    sf::Texture texture;
+    sf::Vector2i localPos, MenuPos, maPos;
+    sf::Text text, MenuAttack, MenuArrow, AttackText;
+    sf::Font font, maFont;
+    sf::RectangleShape Menu, ATBox;
+    vector<RectangleShape> hoverSpots;
+
+
+    bool menuPopup = false;
+    bool attacking = false;
+
+    if (!font.loadFromFile("arial.ttf"))
+    {
+        cout << "Font did not load" << endl;
+    }
+
+    string x;
+    string y;
+    string full;
+
+    //Showing Info and Cords Text
+    text.setFont(font);
+    text.setString(full);
+    text.setCharacterSize(50);
+    text.setFillColor(sf::Color::Magenta);
+    text.setStyle(sf::Text::Bold);
+    text.setOrigin(sf::Vector2f(-100, -100));
+
+    //Background
+    if (!texture.loadFromFile("../SyreTactics./grid.png"))
+    {
+        cout << "Image did not load: " << sf::err << endl;;
+    }
+
+    sf::Sprite sprite;
+    sprite.setTexture(texture);
+    sprite.setScale(sf::Vector2f(3.2f, 2.4f));
+
+    //Menu Things
+    Menu.setSize(sf::Vector2f(125, 300));
+    Menu.setFillColor(sf::Color(128, 128, 128, 220));
+
+    if (!maFont.loadFromFile("arial.ttf"))
+    {
+        cout << "Font did not load" << endl;
+    }
+
+    //TextBox for Attack Sting in Menu
+    MenuAttack.setFont(maFont);
+    MenuAttack.setFillColor(sf::Color::Black);
+    MenuAttack.setString("Attack");
+    MenuAttack.setCharacterSize(30);
+    MenuAttack.setOrigin(0, 0);
+
+    //Attack Text for after clicked
+    AttackText.setFont(maFont);
+    AttackText.setFillColor(sf::Color::Black);
+    AttackText.setString("Your Attacking! \nChose a spot next to you \nto Attack!");
+    AttackText.setCharacterSize(15);
+
+    ATBox.setFillColor(sf::Color{ 83, 86, 90, });
+    ATBox.setSize(sf::Vector2f(250, 100));
+
+
+    //Hover Spots
+    for (int i = 0; i < 4; i++)
+    {
+        RectangleShape r;
+        r.setFillColor(sf::Color::Blue);
+        r.setSize(sf::Vector2f(60, 45));
+
+        hoverSpots.push_back(r);
+    }
+
+
+    //Game Loop
+    while (window.isOpen())
+    {
+        localPos = sf::Mouse::getPosition(window);
+        x = to_string(localPos.x);
+        y = to_string(localPos.y);
+
+
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            //close window
+            if (event.type == sf::Event::Closed)
+                window.close();
+
+
+            //Key Presses
+            else if (event.type == sf::Event::KeyPressed)
+            {
+                switch (event.key.code)
+                {
+                case sf::Keyboard::Escape:
+                    window.close();
+                    break;
+
+                case sf::Keyboard::W:
+                    if (Nesha.getY() + 58 < 0 && (Enemy.getY() != Nesha.getY() + 58 || Enemy.getX() != Nesha.getX())) {
+                        Nesha.setMe(Nesha.getX(), Nesha.getY() + 58);       //-410,-310
+                    }
+                    break;
+
+                case sf::Keyboard::S:
+                    if (Nesha.getY() - 58 > -600 && (Enemy.getY() != Nesha.getY() - 58 || Enemy.getX() != Nesha.getX())) {
+                        Nesha.setMe(Nesha.getX(), Nesha.getY() - 58);
+                    }
+                    break;
+
+                case sf::Keyboard::A:
+                    if (Nesha.getX() + 77 < 0 && (Enemy.getX() != Nesha.getX() + 77 || Enemy.getY() != Nesha.getY())) {
+                        Nesha.setMe(Nesha.getX() + 77, Nesha.getY());
+                    }
+                    break;
+
+                case sf::Keyboard::D:
+                    if (Nesha.getX() - 77 > -750 && (Enemy.getX() != Nesha.getX() - 77 || Enemy.getY() != Nesha.getY())) {
+                        Nesha.setMe(Nesha.getX() - 77, Nesha.getY());
+                    }
+                    break;
+
+                case sf::Keyboard::P:
+                    cout << "X: " << x << endl;
+                    cout << "Y: " << y << endl;
+                    cout << "Me x: " << -1 * Nesha.getX() << endl;
+                    cout << "Me y: " << -1 * Nesha.getY() << endl;
+                    break;
+
+                }
+
+            }//Key Presses
+
+            //Mouse Hovering
+            if (Nesha.isMouseTouching(localPos))
+            {
+                if (event.type == sf::Event::MouseButtonPressed)
+                {
+                    full = "Clicked";
+                    text.setString(full);
+                    Nesha.setMyColor(sf::Color::Green);
+                    menuPopup = true;
+                    MenuPos.x = Nesha.getX() - 120;
+                    MenuPos.y = Nesha.getY() + 220;
+                    Menu.setOrigin(MenuPos.x, MenuPos.y);
+                    maPos.x = MenuPos.x - 10;
+                    maPos.y = MenuPos.y - 30;
+                    MenuAttack.setOrigin(maPos.x, maPos.y);
+
+                }
+                else
+                {
+                    /*
+                    full = "Nesha \nHP: ";
+                    full.append(to_string(Nesha.getHP()));
+                    full.append("\nAttack: ");
+                    full.append(to_string(localPos.x));
+                    text.setString(full);
+                    text.setFillColor(sf::Color::Blue);
+                    */
+
+                    Nesha.setMyColor(sf::Color{ 144, 238, 144 });
+                }
+            }
+
+            else if (menuPopup && inMenu(localPos, MenuPos))
+            {
+                menuPopup = true;
+                full = "";
+                text.setString(full);
+
+                //If atttacking string is clicked
+                if (inAttack(localPos, maPos, event))
+                {
+                    MenuAttack.setFillColor(sf::Color(211, 211, 211, 250));
+                    if (event.type == sf::Event::MouseButtonPressed)
+                    {
+                        menuPopup = false;
+                        MenuAttack.setFillColor(sf::Color::Black);
+                        attacking = true;
+                        AttackText.setOrigin(maPos.x + 45, maPos.y - 20);
+                        ATBox.setOrigin(maPos.x + 50, maPos.y);
+                        for (int i = 0; i < hoverSpots.size(); i++)
+                        {
+                            int x = Nesha.getX();
+                            int y = Nesha.getY();
+                            if (i == 0)
+                                y += 60;
+                            else if (i == 1)
+                                x += 80;
+                            else if (i == 2)
+                                y -= 55;
+                            else if (i == 3)
+                                x -= 70;
+
+                            hoverSpots[i].setOrigin(x, y);
+                        }
+
+                    }
+
+                }
+
+                else
+                    MenuAttack.setFillColor(sf::Color::Black);
+            }
+
+            //ATTACKING
+
+
+
+
+            else if (attacking)
+            {
+                sf::Color hoverBlue({ 173, 216, 230 });
+                //cout << whichArea(localPos, Nesha.getX(), Nesha.getY(), event) << endl;
+                switch (whichArea(localPos, Nesha.getX(), Nesha.getY()))
+                {
+                case 't':
+                    hoverSpots[0].setFillColor(hoverBlue);
+                    break;
+                case 'l':
+                    hoverSpots[1].setFillColor(hoverBlue);
+                    break;
+                case 'b':
+                    hoverSpots[2].setFillColor(hoverBlue);
+                    break;
+                case 'r':
+                    hoverSpots[3].setFillColor(hoverBlue);
+                    break;
+                default:
+                    for (int i = 0; i < hoverSpots.size(); i++)
+                        hoverSpots[i].setFillColor(sf::Color::Blue);
+                }
+
+
+            }
+
+
+
+
+
+            else if (attacking && !ifAttackArea(localPos, Nesha.getX(), Nesha.getY()))
+            {
+                for (int i = 0; i < hoverSpots.size(); i++)
+                {
+                    hoverSpots[i].setFillColor(Color::Blue);
+                }
+            }
+
+            else if (!Nesha.isMouseTouching(localPos) && menuPopup && event.type == sf::Event::MouseButtonPressed && !inMenu(localPos, MenuPos))
+            {
+                menuPopup = false;
+            }
+
+            else if (Enemy.isMouseTouching(localPos))
+            {
+                if (event.type == sf::Event::MouseButtonPressed)
+                {
+                    full = "Enemy \nHP: ";
+                    full.append(to_string(Enemy.getHP()));
+                    full.append("\nAttack: ");
+                    full.append(to_string(Enemy.getAttack()));
+                    text.setString(full);
+                    text.setFillColor(sf::Color::Red);
+                }
+
+
+                Enemy.setMyColor(sf::Color{ 255, 204, 203 });
+            }
+
+
+            else
+            {
+                full = "";
+                text.setString(full);
+                /*
+                full = "X: ";
+                full.append(x);
+                full.append(" Y: ");
+                full.append(y);
+                text.setString(full);
+                */
+                Nesha.setMyColor(sf::Color::Green);
+                Enemy.setMyColor(sf::Color::Red);
+            }
+        }
+
+
+
+        //All Draw Functions
+
+        window.clear();
+        window.draw(sprite);
+        window.draw(Nesha.getMe());
+        window.draw(Enemy.getMe());
+        window.draw(text);
+        if (menuPopup)
+        {
+            window.draw(Menu);
+            window.draw(MenuAttack);
+        }
+        else if (attacking)
+        {
+            window.draw(ATBox);
+            window.draw(AttackText);
+            for (int i = 0; i < hoverSpots.size(); i++)
+                window.draw(hoverSpots[i]);
+            window.draw(Enemy.getMe());
+        }
+        window.display();
+    }
+
+    return 0;
+}
