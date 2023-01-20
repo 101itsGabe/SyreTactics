@@ -24,9 +24,18 @@
     <ClCompile Include="Board.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="grid.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="swiffer.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Cats\Spritesheets\spritesheet.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
@@ -35,6 +44,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Board.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GMenu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

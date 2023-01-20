@@ -142,17 +142,21 @@
   <ItemGroup>
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Board.cpp" />
+    <ClCompile Include="GMenu.cpp" />
     <ClCompile Include="Source.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\manng\Desktop\Games Bitch%27\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Level2</WarningLevel>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Cats\Spritesheets\spritesheet.png" />
     <Image Include="grid.png" />
+    <Image Include="swiffer.png" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Board.h" />
+    <ClInclude Include="GMenu.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Text.txt" />
