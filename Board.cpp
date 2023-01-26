@@ -75,7 +75,7 @@ void Board::setSpaceColor(int i, int j,sf::Color c)
 		boardVec[i][j].setFillColor(c);
 }
 
-void Board::drawPiece(RenderTarget& target, Entity e)
+void Board::drawPiece(RenderTarget& target, Entity e,bool gm)
 {
 	Vector2i curPos(e.getAt().x, e.getAt().y);
 	for (int i = 0; i < boardVec.size(); i++)
@@ -92,6 +92,8 @@ void Board::drawPiece(RenderTarget& target, Entity e)
 		}
 	}
 	target.draw(e);
+	if(gm)
+		e.drawGMenu(target);
 }
 
 void Board::draw(sf::RenderTarget& target, sf::RenderStates states) const

@@ -15,12 +15,16 @@ public:
 	void Attack(Entity&);
 	void setHp(int h);
 	void setAttack(int a);
-	//void setMe(int,int);
 	void setMyColor(sf::Color);
 	void setName(string);
 	void setAt(int, int);
 	void setPos(Vector2i);
 	void setTexture(string);
+	void drawGMenu(RenderTarget&);
+	void setMenuState(bool);
+
+	
+
 
 	Vector2i getAt();
 	Vector2i getPos();
@@ -28,10 +32,10 @@ public:
 	int getY();
 	int getHP();
 	int getAttack();
+	bool getMenuState();
 	string getName();
-	bool isMouseTouching(const sf::Vector2i&);
 
-	void drawGMenu(RenderTarget&, GMenu);
+
 
 	sf::RectangleShape getMe();
 
@@ -46,6 +50,8 @@ private:
 	int curX, curY, pixelH;
 	Vector2i myPos;
 	string Name;
+	GMenu myMenu;
+	bool menuState;
 	
 
 	// Draw class on SFML Window

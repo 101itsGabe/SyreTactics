@@ -9,7 +9,6 @@ int main()
 	Board board;
 	board.load();
 	bool chooseMode = false;
-	bool hasMoved = false;
 	Entity me,en;
 	en.setTexture("./Cats/SpriteSheets/Seal_Point_001.png");
 	en.setAt(9, 7);
@@ -30,34 +29,16 @@ int main()
 			{
 				if (event.key.code == Keyboard::Escape)
 					window.close();
-				/*
-				else if (event.key.code == Keyboard::L)
-				{
-					std::cout << "X: " << localPos.x << endl;
-					cout << "Y: " << localPos.y << endl;
-					cout << "R: " << board.curSpace(localPos).x << endl;
-					cout << "C: " << board.curSpace(localPos).y << endl;
-				} 
-				
-				
-				else if (event.key.code == Keyboard::B)
-				{
-					cout << "X: " << me.getPos().x;
-					cout << "\nY: " << me.getPos().y;
-					cout << "\nMouse X: " << localPos.x;
-					cout << "\nY: " << localPos.y << endl;
-					chooseMode = true;
-
-				}*/
 
 			
 				
 			}
 
-			else if (event.type == Event::MouseButtonPressed && board.checkPlayer(localPos, me))
+			else if (event.type == Event::MouseButtonPressed && board.checkPlayer(localPos, me))		//if mouse has been clicked on player
 			{
 				chooseMode = true;
 				cout << "YUH BITCH" << endl;
+				me.setMenuState(true);
 			}
 
 			
@@ -80,19 +61,9 @@ int main()
 				else 
 				{
 					curSpot = board.curSpace(localPos);
-					cout << board.curSpace(localPos).x << endl;
-					cout << board.curSpace(localPos).y << endl;
-					cout << lastSpot.x << endl;
-					cout << lastSpot.y << "\n\n";
-					
 
 					if (lastSpot.x == -1 || lastSpot.y == -1)
 						lastSpot = curSpot;
-
-					//std::cout << "temp x:" << curSpot.x << endl;
-					//std::cout << "temp y:" << curSpot.y << endl;
-					//std::cout << "ls x:" << lastSpot.x << endl;
-					//std::cout << "ls y:" << lastSpot.y << endl;
 
 
 					if (curSpot == lastSpot)
@@ -106,30 +77,23 @@ int main()
 						lastSpot = curSpot;
 					}
 
-					if (event.type == Event::MouseButtonPressed && me.getAt() != board.curSpace(localPos))
+					if (event.type == Event::MouseButtonPressed && me.getAt() != board.curSpace(localPos))	//clicked the space wnated
 					{
-						cout << "BLEEEEEEEEEEEEEEEP \n";
 						me.setAt(board.curSpace(localPos).x, board.curSpace(localPos).y);
 						board.setSpaceColor(curSpot.x, curSpot.y, Color::White);
 						lastSpot = curSpot;
 						chooseMode = false;
-						hasMoved = true;
+						me.setMenuState(false);
 					}
 					
 				}
 			}
 
 
-
-
-			
-			
-
-
-
+			window.clear();
 			window.draw(board);
-			board.drawPiece(window,me);
-			board.drawPiece(window, en);
+			board.drawPiece(window,me,me.getMenuState());
+			board.drawPiece(window, en,en.getMenuState());
 
 			window.display();
 		}
