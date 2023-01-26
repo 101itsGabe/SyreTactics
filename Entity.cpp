@@ -17,6 +17,7 @@ Entity::Entity()
 
 	setAt(0, 0);
 	Name = "Nesha";
+	menuState = false;
 }
 
 Entity::Entity(string s,int x,int y,int w,int h)
@@ -84,15 +85,8 @@ Vector2i Entity::getAt()
 
 Vector2i Entity::getPos()
 {
-	/*FIND OUT WHERE
-	Sprite setPositions() is cause
-	its probably why this is 0  it dont make sense
-	AND GABE RE FUCKING LAX AND READ THIS!!!!!!!!!!!
-	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-	//cout << "BLEHHH\n\n";
-	//cout << "X: " << sprite.getPosition().x << endl;
-	//cout << "Y: " << sprite.getPosition().y << endl << endl;
-
+	//cout << "Inside: " << sprite.getPosition().x << endl;
+	//cout << "Inside: " << sprite.getPosition().y << endl;
 	return Vector2i(sprite.getPosition().x,sprite.getPosition().y);
 }
 
@@ -117,6 +111,11 @@ void Entity::setAttack(int a)
 	attackPower = a;
 }
 
+void Entity::setMenuState(bool t)
+{
+	menuState = t;
+}
+
 void Entity::setHp(int h)
 {
 	hp = h;
@@ -137,25 +136,25 @@ sf::RectangleShape Entity::getMe()
 	return me;
 }
 
-bool Entity::isMouseTouching(const sf::Vector2i& localPos)
+
+
+void Entity::drawGMenu(RenderTarget& target)
 {
 	
-	cout << "LocalPos X: " << localPos.x << endl;
-	cout << "LocalPos y: " << localPos.y << endl;
-	cout << "sprte X: " << sprite.getPosition().x << endl;
-	cout << "sprte y: " << getPos().y << endl;
-
-	if(getAt().x == 10000)
-	{
-		cout << "TRUE" << endl;
-		return true;
-	}
-	cout << "FALSE" << endl;
-	return false;
+	Vector2i v;
+	if(getAt().x < 5)
+		v.x = sprite.getPosition().x + 120;
+	else
+		v.x = sprite.getPosition().x - 200;
+	if(getAt().y < 5)
+		v.y = sprite.getPosition().y + 120;
+	else
+		v.y = sprite.getPosition().y - 180;
+	myMenu.setPos(v);
+	target.draw(myMenu);
 }
 
-void Entity::drawGMenu(RenderTarget& target, GMenu g)
+bool Entity::getMenuState()
 {
-	g.setPos(getAt());
-	target.draw(g);
+	return menuState;
 }

@@ -11,7 +11,7 @@ public:
 	//sets everything up for the board
 	void load();
 	void setSpaceColor(int, int,Color);
-	void drawPiece(RenderTarget&, Entity);
+	void drawPiece(RenderTarget&, Entity,bool);
 
 	bool checkMouse(Vector2i);
 	bool checkPlayer(Vector2i mouse,Entity e);

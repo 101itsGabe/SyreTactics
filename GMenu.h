@@ -9,7 +9,8 @@ using namespace sf;
 class GMenu : public Drawable
 {
 public:
-	GMenu(Window);
+	GMenu();
+	//GMenu(Window);
 
 	void setAt(Vector2i);
 	void setPos(Vector2i);
